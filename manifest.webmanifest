@@ -1,0 +1,20 @@
+{
+  "id": "./",
+  "name": "HubLink Logistics",
+  "short_name": "HubLink",
+  "description": "Local order and shipment workspace",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "theme_color": "#2563eb",
+  "background_color": "#f4f7fb",
+  "icons": [
+    {
+      "src": "icons/hublink.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HubLink Logistics</title>
+  <meta name="theme-color" content="#2563eb">
+  <meta name="description" content="HubLink Logistics local order and shipment workspace">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="icons/hublink.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="icons/hublink.svg">
+
+  <!-- Poppins font from Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
+
+  <!-- Lucide icons from the browser CDN -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+</head>
+<body>
+
+  <!-- =====================================================
+       A. LOGIN AND REGISTRATION
+       ===================================================== -->
+  <div id="auth-screen" class="auth-screen">
+    <div class="auth-brand">
+      <div>
+        <div class="sidebar-brand" style="border:none;padding:0;color:#fff;">
+          <span class="brand-mark" style="background:#fff;color:#2563eb;"><i data-lucide="truck" class="icon"></i></span>
+          <span>HubLink Logistics</span>
+        </div>
+        <h1 style="margin-top:48px;">Deliver on your terms, from your local hub.</h1>
+        <p>Manage orders, delivery choices, and shipment progress from your local hub.</p>
+        <ul class="auth-points">
+          <li><i data-lucide="shield-check" class="icon"></i><span>Verified buyers and validated addresses before checkout.</span></li>
+          <li><i data-lucide="layers" class="icon"></i><span>Consolidate parcels at no extra fee, or schedule and hold for 3%.</span></li>
+          <li><i data-lucide="clock" class="icon"></i><span>12 hours to choose. Standard Dispatch is the default.</span></li>
+        </ul>
+      </div>
+      <p class="small">This workspace stores its operational records in this browser.</p>
+    </div>
+
+    <div class="auth-panel">
+      <div class="auth-card">
+        <h2>Welcome</h2>
+        <p class="muted small">Local workspace access only. Credentials and roles are not verified by an authentication service.</p>
+
+        <div class="tabs">
+          <button class="tab-btn active" data-action="auth-tab" data-tab="login" id="tab-login">Log in</button>
+          <button class="tab-btn" data-action="auth-tab" data-tab="register" id="tab-register">Register</button>
+        </div>
+
+        <!-- Login form -->
+        <form id="login-form" novalidate>
+          <div class="form-group">
+            <label for="login-id">Email or mobile number</label>
+            <input type="text" id="login-id" autocomplete="username" aria-describedby="login-id-error">
+            <p class="field-error" id="login-id-error"></p>
+          </div>
+          <div class="form-group">
+            <label for="login-password">Password</label>
+            <div class="password-field">
+              <input type="password" id="login-password" autocomplete="current-password" aria-describedby="login-password-error">
+              <button type="button" class="password-toggle" data-action="toggle-login-password" aria-label="Show password" aria-pressed="false"><i data-lucide="eye" class="icon"></i></button>
+            </div>
+            <p class="field-error" id="login-password-error"></p>
+          </div>
+          <div class="form-group">
+            <label for="login-role">Account type</label>
+            <select id="login-role">
+              <option value="buyer">Buyer</option>
+              <option value="seller">Seller</option>
+              <option value="admin">Administrator</option>
+            </select>
+          </div>
+          <button type="submit" id="login-submit" class="btn btn-primary btn-block">Log in</button>
+          <button type="button" id="use-test-account" class="btn btn-secondary btn-block test-account-btn hidden" data-action="use-test-account">Use Test Account</button>
+          <p id="test-account-message" class="hint auth-feedback" aria-live="polite"></p>
+          <p class="hint">This local workspace checks contact and password format only. No account credentials are verified.</p>
+        </form>
+
+        <!-- Registration form -->
+        <form id="register-form" class="hidden" novalidate>
+          <div class="form-group">
+            <label for="reg-name">Full name</label>
+            <input type="text" id="reg-name" autocomplete="name">
+            <p class="field-error" id="reg-name-error"></p>
+          </div>
+          <div class="form-group">
+            <label for="reg-id">Email or mobile number</label>
+            <input type="text" id="reg-id" autocomplete="username">
+            <p class="field-error" id="reg-id-error"></p>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="reg-password">Password</label>
+              <input type="password" id="reg-password" autocomplete="new-password">
+              <p class="field-error" id="reg-password-error"></p>
+            </div>
+            <div class="form-group">
+              <label for="reg-confirm">Confirm password</label>
+              <input type="password" id="reg-confirm" autocomplete="new-password">
+              <p class="field-error" id="reg-confirm-error"></p>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="reg-role">Account type</label>
+            <select id="reg-role">
+              <option value="buyer">Buyer</option>
+              <option value="seller">Seller</option>
+              <option value="admin">Administrator</option>
+            </select>
+          </div>
+          <button type="submit" class="btn btn-primary btn-block">Continue to workspace</button>
+          <p class="hint">Account and operational data are stored in this browser.</p>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- =====================================================
+       MAIN APPLICATION SHELL
+       ===================================================== -->
+  <div id="app" class="app hidden">
+
+    <!-- Collapsible sidebar (items are filled in by script.js for each role) -->
+    <aside id="sidebar" class="sidebar">
+      <div class="sidebar-brand">
+        <span class="brand-mark"><i data-lucide="truck" class="icon"></i></span>
+        <span class="brand-text">HubLink Logistics</span>
+        <button class="icon-btn sidebar-close" data-action="close-sidebar" aria-label="Close navigation"><i data-lucide="x" class="icon"></i></button>
+      </div>
+      <nav id="sidebar-nav" class="sidebar-nav" aria-label="Main navigation"></nav>
+      <div class="sidebar-footer">
+        <div class="role-card" id="sidebar-role-card"></div>
+      </div>
+    </aside>
+    <div id="sidebar-backdrop" class="sidebar-backdrop" data-action="close-sidebar"></div>
+
+    <div class="main-wrap">
+      <!-- Top navigation bar -->
+      <header class="topbar">
+        <button class="icon-btn" data-action="toggle-sidebar" aria-label="Toggle navigation" aria-controls="sidebar" aria-expanded="false"><i data-lucide="menu" class="icon"></i></button>
+
+        <div class="topbar-title">
+          <h2 id="page-title">Dashboard</h2>
+          <p id="page-desc"></p>
+        </div>
+
+        <div class="topbar-tools">
+          <button class="btn btn-secondary btn-sm pwa-install" id="pwa-install" data-action="pwa-install" hidden>Install app</button>
+          <!-- Local workflow clock for reviewing deadline transitions -->
+          <button class="clock-chip" data-action="open-clock" title="Open workflow clock">
+            <i data-lucide="clock" class="icon icon-sm"></i><span id="clock-label"></span>
+          </button>
+
+          <!-- Role switcher -->
+          <div class="role-switch">
+            <label for="role-select" class="small muted">Workspace</label>
+            <select id="role-select" data-onchange="role-switch">
+              <option value="buyer">Buyer</option>
+              <option value="seller">Seller</option>
+              <option value="admin">Administrator</option>
+            </select>
+          </div>
+
+          <!-- Notification icon -->
+          <div class="dropdown-wrap">
+            <button class="icon-btn" data-action="toggle-bell" aria-label="Notifications">
+              <i data-lucide="bell" class="icon"></i>
+              <span class="bell-badge hidden" id="bell-badge">0</span>
+            </button>
+            <div class="dropdown" id="bell-panel"></div>
+          </div>
+
+          <!-- Profile menu -->
+          <div class="dropdown-wrap">
+            <button class="profile-btn" data-action="toggle-profile" aria-label="Profile menu">
+              <span class="avatar" id="profile-avatar">MS</span>
+              <span class="profile-btn-text"><strong id="profile-name">Maria Santos</strong><span id="profile-role">Buyer</span></span>
+              <i data-lucide="chevron-down" class="icon icon-sm"></i>
+            </button>
+            <div class="dropdown" id="profile-panel" style="width:240px;">
+              <button class="menu-item" data-action="go-profile"><i data-lucide="user" class="icon"></i>My profile</button>
+              <button class="menu-item" data-action="open-clock"><i data-lucide="clock" class="icon"></i>Workflow clock</button>
+              <button class="menu-item" data-action="reset-demo"><i data-lucide="rotate-ccw" class="icon"></i>Restore local records</button>
+              <button class="menu-item" data-action="logout"><i data-lucide="log-out" class="icon"></i>Log out</button>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <div id="network-status" class="network-status" role="status" aria-live="polite" hidden></div>
+
+      <!-- Main content area: every screen is drawn into this container -->
+      <main id="page-view" class="content"></main>
+    </div>
+  </div>
+
+  <!-- Modal dialogs, toasts, and the hidden receipt used for printing -->
+  <div id="modal-root"></div>
+  <div id="toast-root" aria-live="polite"></div>
+  <div id="print-area"></div>
+
+  <script src="script.js"></script>
+</body>
+</html>
